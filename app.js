@@ -3,6 +3,7 @@ $(() => {
 const testWord = 'apple'//WORDS[Math.floor(Math.random()*WORDS.length)];
 let inputWord = [];
 let turnCounter = 0;
+let WORDLENGTH = 5;
 // let hasInput = false;
     
 // function printWord (string) {
@@ -58,7 +59,7 @@ function removeLetter (num) {
 }
 
 function submitWord(){
-    if(letterCounter === 5){ //check length
+    if(letterCounter === WORDLENGTH){ //check length
 
         if(checkDictionary(inputWord)){ //check validity of word
             compareWord(turnCounter); // compare with answer word
@@ -72,9 +73,11 @@ function submitWord(){
 
         } else {
             log("Invalid word!");
+            emptyRow(turnCounter);
         }
     } else {
         log("Not enough letters!");
+        emptyRow(turnCounter);
     }
 }
 
@@ -101,7 +104,7 @@ function compareWord (turn) {
         testWordDouble.push(letter.toUpperCase());
     }
     
-    for (let i = 0 ; i < 5 ; i++){
+    for (let i = 0 ; i < WORDLENGTH ; i++){
         
         $(`#letter${i}`).css('background', '#454545'); //grey
 
@@ -113,8 +116,8 @@ function compareWord (turn) {
         }
     }
 
-    for (let i = 0 ; i < 5 ; i++){
-        for (let j = 0; j < 5 ; j++){
+    for (let i = 0 ; i < WORDLENGTH ; i++){
+        for (let j = 0; j < WORDLENGTH ; j++){
             if((inputWord[i] === testWordDouble[j]) && (inputWord[i] != "")){ //if letter exists but not in correct square
                 $(`#letter${i}`).css('background', '#b59f3b'); //yellow
                 testWordDouble[j] = ""; //replace the common letter with a blank
@@ -127,7 +130,7 @@ function compareWord (turn) {
     
     inputWord = [];
     console.log(testWordDouble, turn);
-    if(correctLetter === 5){
+    if(correctLetter === WORDLENGTH){
         win();
     }
 }
@@ -135,11 +138,13 @@ function compareWord (turn) {
 function win(){
     $('form').hide();
     log('You guessed the word!');
+    gameOver = 1;
 }
 
 function lose (){
     $('form').hide();
     log('Try again next time!');
+    gameOver = 1;
 }
 
 function log(msg){
@@ -149,36 +154,43 @@ function log(msg){
 function toggleNextRow (turn) {
     $(`#row${turn}`).empty();
     if(turn < 6){
-        for(let i = 0 ; i < 5 ; i++){
+        for(let i = 0 ; i < WORDLENGTH ; i++){
             const $square = $('<div>').addClass("letter-square letter").attr('id', `letter${i}`);
             $(`#row${turn}`).append($square);
         }
     }
 }
 
+function emptyRow(num){
+    $(`#row${num}`).effect("shake", {distance:5});
+}
+
 
 let letterCounter = 0;
+let gameOver = 0;
 
 $(window).keydown(function(e) {
-    let key = e.key;
-    let keyCode = e.keyCode;
-
-    if (keyCode >= 65 && keyCode <= 90){ //a-z / A-Z
-        //console.log(key);
-        if(letterCounter < 5){
-            inputLetter(key,letterCounter);
-            letterCounter++;
-        }
-    } else if (keyCode === 8){ //Backspace
-        if(letterCounter >= 0){
-            removeLetter(letterCounter-1);
-            if(letterCounter !== 0){
-                letterCounter--
+    if(gameOver === 0){
+        let key = e.key;
+        let keyCode = e.keyCode;
+    
+        if (keyCode >= 65 && keyCode <= 90){ //a-z / A-Z
+            //console.log(key);
+            if(letterCounter < WORDLENGTH){
+                inputLetter(key,letterCounter);
+                letterCounter++;
             }
-        }
-    } else if (keyCode === 13){ //Enter)
-        submitWord();
-    } 
+        } else if (keyCode === 8){ //Backspace
+            if(letterCounter >= 0){
+                removeLetter(letterCounter-1);
+                if(letterCounter !== 0){
+                    letterCounter--
+                }
+            }
+        } else if (keyCode === 13){ //Enter)
+            submitWord();
+        } 
+    }
 
 });
 
