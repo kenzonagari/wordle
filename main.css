@@ -4,18 +4,28 @@ body {
     color: antiquewhite;
 }
 
+#container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+
 .row {
     width:auto;
     display: flex;
-
 }
 .letter-square {
     width: 75px;
     height: 75px;
-    margin: 3.5px;
+    margin: 3px;
     background-color: transparent;
     border: 1.5px solid #454545;
-    border-radius: 5px;
+    border-radius: 0px;
 }
 
 .letter {
@@ -25,4 +35,8 @@ body {
     line-height: 75px;
     text-align: center;
     font-weight: bold;
+}
+
+#check, #message-log{
+    margin: 3.5px; 
 }
