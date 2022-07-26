@@ -1,5 +1,7 @@
 body {
     background: black;
+    font-family: Arial, Helvetica, sans-serif;
+    color: antiquewhite;
 }
 
 .row {
@@ -11,7 +13,7 @@ body {
     width: 75px;
     height: 75px;
     margin: 3.5px;
-    background-color: rgb(0, 0, 0);
+    background-color: transparent;
     border: 1.5px solid #454545;
     border-radius: 5px;
 }
