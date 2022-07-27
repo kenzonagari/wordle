@@ -73,11 +73,11 @@ function submitWord(){
 
         } else {
             log("Invalid word!");
-            emptyRow(turnCounter);
+            shakeRow(turnCounter);
         }
     } else {
         log("Not enough letters!");
-        emptyRow(turnCounter);
+        shakeRow(turnCounter);
     }
 }
 
@@ -150,7 +150,7 @@ function lose (){
 function log(msg){
     const $divLog = $('<div>').text(msg).attr('id', 'message-log');
     $('#message-container').append($divLog);
-    //$divLog.hide(2000);
+    $divLog.fadeOut(1000);
 }
 
 function toggleNextRow (turn) {
@@ -163,13 +163,15 @@ function toggleNextRow (turn) {
     }
 }
 
-function emptyRow(num){
-    $(`#row${num}`).effect("shake", {distance:5});
+function shakeRow(num){
+    //$(`#row${num}`).finish();
+    $(`#row${num}`).effect("shake", {distance:5, times:3});
 }
 
 
 let letterCounter = 0;
 let gameOver = 0;
+let keyDown = false;
 
 $(window).keydown(function(e) {
     if(gameOver === 0){
@@ -190,7 +192,20 @@ $(window).keydown(function(e) {
                 }
             }
         } else if (keyCode === 13){ //Enter)
-            submitWord();
+            if(!keyDown){
+                keyDown = true;
+                submitWord();
+            }
+        } 
+    }
+});
+    
+$(window).keyup(function(e) { //*prevent continuous input when Enter key is held down
+    if(gameOver === 0){
+        let keyCode = e.keyCode;
+    
+        if (keyCode === 13){ //Enter)
+            keyDown = false;
         } 
     }
 
