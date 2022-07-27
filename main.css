@@ -60,18 +60,14 @@ h2 {
 #message-container{
     flex-grow: 0;
     z-index: 4;
-    animation: fadeOut 1s;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+    /* display: flex; */
+    /* justify-content: flex-start;
+    align-items:flex-start; */
     flex-direction: column;
     position: absolute;
     left: 50%;
     transform: translate(-50%,-50%);
-    visibility: hidden;
-    /* opacity: 1;
-    transition: visibility 0s 2s, opacity 2s linear; */
-    
+   
 }
 
 #message-log{
