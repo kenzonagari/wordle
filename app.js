@@ -1,6 +1,6 @@
 $(() => {
     
-const testWord = 'apple'//WORDS[Math.floor(Math.random()*WORDS.length)];
+const testWord = WORDS[Math.floor(Math.random()*WORDS.length)];
 let inputWord = [];
 let turnCounter = 0;
 let WORDLENGTH = 5;
@@ -65,7 +65,7 @@ function submitWord(){
             compareWord(turnCounter); // compare with answer word
             //if not correct:
             turnCounter++;
-            if(turnCounter > 5){
+            if((turnCounter > 5) && (gameOver === 0)){
                 lose();
             }
             toggleNextRow(turnCounter); //move to next row 
@@ -109,7 +109,7 @@ function compareWord (turn) {
         $(`#letter${i}`).css('background', '#454545'); //grey
 
         if(inputWord[i] === testWordDouble[i]){ //if letter is in correct square
-            $(`#letter${i}`).css('background', '#538d4e'); //green
+            $(`#letter${i}`).css('background', '#5688c7'); //green
             correctLetter++;
             inputWord[i] = "";
             testWordDouble[i] = ""; //replace the common letter with a blank
@@ -119,7 +119,7 @@ function compareWord (turn) {
     for (let i = 0 ; i < WORDLENGTH ; i++){
         for (let j = 0; j < WORDLENGTH ; j++){
             if((inputWord[i] === testWordDouble[j]) && (inputWord[i] != "")){ //if letter exists but not in correct square
-                $(`#letter${i}`).css('background', '#b59f3b'); //yellow
+                $(`#letter${i}`).css('background', '#8d6a9f'); //yellow
                 testWordDouble[j] = ""; //replace the common letter with a blank
                 j = 4; //force end loop
             }
@@ -148,7 +148,9 @@ function lose (){
 }
 
 function log(msg){
-    $('#message-log').text(msg);
+    const $divLog = $('<div>').text(msg).attr('id', 'message-log');
+    $('#message-container').append($divLog);
+    //$divLog.hide(2000);
 }
 
 function toggleNextRow (turn) {
