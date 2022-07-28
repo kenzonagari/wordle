@@ -65,12 +65,14 @@ $(() => {
 function inputLetter (letter, num) {
     inputWord.push(letter.toUpperCase());
     $(`#letter${num}`).text(inputWord[num]);
+    bounceOutSquare(num);
     //console.log(inputWord);
 }
 
 function removeLetter (num) {
     inputWord.pop();
     $(`#letter${num}`).empty();
+    bounceInSquare(num);
 }
 
 function submitWord(){
@@ -232,6 +234,22 @@ function shakeRow(num){
     $(`#row${num}`).css({animation: `wiggle 0.5s ease-out`});
     setTimeout(()=>{
         $(`#row${num}`).css({animation: ''});
+    }, 500)
+}
+
+function bounceOutSquare(num){
+    //$(`#row${num}`).finish();
+    $(`#letter${num}`).css({animation: `bounce-out 0.2s ease-out`});
+    setTimeout(()=>{
+        $(`#letter${num}`).css({animation: ''});
+    }, 500)
+}
+
+function bounceInSquare(num){
+    //$(`#row${num}`).finish();
+    $(`#letter${num}`).css({animation: `bounce-in 0.2s ease-out`});
+    setTimeout(()=>{
+        $(`#letter${num}`).css({animation: ''});
     }, 500)
 }
 

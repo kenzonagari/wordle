@@ -125,6 +125,14 @@ h2 {
     60%{transform: translateX(5px);}
 }
 
+@keyframes bounce-in {
+    10% {transform: scale(90%);}
+}
+
+@keyframes bounce-out {
+    10% {transform: scale(110%);}
+}
+
 #buttons{
     position: fixed;
     bottom: 5px;
