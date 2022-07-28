@@ -4,6 +4,11 @@ const testWord = WORDS[Math.floor(Math.random()*WORDS.length)];
 let inputWord = [];
 let turnCounter = 0;
 let WORDLENGTH = 5;
+const colors = {
+    wrong: '#464655',
+    halfRight: '#8c86aa',
+    right: '#067bc2',
+};
 // let hasInput = false;
     
 // function printWord (string) {
@@ -105,11 +110,11 @@ function compareWord (turn) {
     }
     
     for (let i = 0 ; i < WORDLENGTH ; i++){
-        
-        $(`#letter${i}`).css('background', '#454545'); //grey
 
+        flipSquare($(`#letter${i}`),colors.wrong,i); //*grey
+        
         if(inputWord[i] === testWordDouble[i]){ //if letter is in correct square
-            $(`#letter${i}`).css('background', '#5688c7'); //green
+            flipSquare($(`#letter${i}`),colors.right, i); //*correct
             correctLetter++;
             inputWord[i] = "";
             testWordDouble[i] = ""; //replace the common letter with a blank
@@ -119,32 +124,63 @@ function compareWord (turn) {
     for (let i = 0 ; i < WORDLENGTH ; i++){
         for (let j = 0; j < WORDLENGTH ; j++){
             if((inputWord[i] === testWordDouble[j]) && (inputWord[i] != "")){ //if letter exists but not in correct square
-                $(`#letter${i}`).css('background', '#8d6a9f'); //yellow
+                flipSquare($(`#letter${i}`),colors.halfRight, i); //*half-correct
                 testWordDouble[j] = ""; //replace the common letter with a blank
                 j = 4; //force end loop
             }
-        }
-        
-        $(`#letter${i}`).attr('id', 'locked');        
+        } 
     }
     
     inputWord = [];
     console.log(testWordDouble, turn);
     if(correctLetter === WORDLENGTH){
         win();
+    } else {
+        for(let i = 0 ; i < 5 ; i++){
+            $(`#letter${i}`).attr('id', 'locked'); 
+        }
     }
 }
 
+const stepT = 200;
+const flipT = 600;
+
+function flipSquare ($div, color, num){
+
+    setTimeout(()=>{
+        gameOver = 1; // disallow input while animation plays
+        $div.css({animation: `flip ${flipT}ms ease-out`});
+    }, stepT*(num));
+    setTimeout(()=>{
+        $div.css('background', color);
+        $div.css('border-color', color);
+    }, (stepT*(num)+(flipT/2)));
+    setTimeout(()=>{
+        gameOver = 0; // allow input after animation plays
+        keyDown = false;
+    }, (stepT*4 +(flipT)));
+}
+
 function win(){
-    $('form').hide();
-    log('You guessed the word!');
-    gameOver = 1;
+    const stepT = 100;
+    gameOverLog('Yay! You guessed the word!');
+    for (let i = 0 ; i < 5 ; i++){
+        setTimeout(()=>{
+            gameOver = 1;
+            $(`#letter${i}`).css({animation: `rise 1s ease-out`});
+        }, (stepT*i) + (stepT*4 +(flipT)));
+    }
 }
 
 function lose (){
-    $('form').hide();
-    log('Try again next time!');
     gameOver = 1;
+    gameOverLog('Try again next time!');
+}
+
+function gameOverLog(str){
+    setTimeout(()=>{
+        $('#gameover-log').text(str);
+    }, (stepT) + (stepT*4 +(flipT)));
 }
 
 function log(msg){
@@ -191,7 +227,7 @@ $(window).keydown(function(e) {
                     letterCounter--
                 }
             }
-        } else if (keyCode === 13){ //Enter)
+        } else if (keyCode === 13){ //Enter
             if(!keyDown){
                 keyDown = true;
                 submitWord();

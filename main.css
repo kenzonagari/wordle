@@ -14,8 +14,11 @@ h1{
 
 h2 {
     text-align: center;
-    font-weight: lighter;
+    font-weight: 100;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    letter-spacing: 1.5px;
     font-size: larger;
+    font-style: italic;
     margin: 0;
 }
 
@@ -35,13 +38,14 @@ h2 {
     width:auto;
     display: flex;
 }
+
 .letter-square {
     width: 75px;
     height: 75px;
     margin: 3px;
     background-color: transparent;
-    border: 1.5px solid #454545;
-    border-radius: 0px;
+    border: 2px solid #454545;
+    border-radius: 5px;
 }
 
 .letter {
@@ -52,6 +56,10 @@ h2 {
     text-align: center;
     font-weight: bold;
 }
+
+/* #locked{
+    animation: flip 1s ease-out;
+} */
 
 #check, #message-log{
     margin: 3.5px; 
@@ -67,7 +75,6 @@ h2 {
     position: absolute;
     left: 50%;
     transform: translate(-50%,-50%);
-   
 }
 
 #message-log{
@@ -78,4 +85,27 @@ h2 {
     padding: 10px;
     border-radius: 10px;
     width: fit-content;
+}
+
+#gameover-log{
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%,0);
+    text-align: center;
+    margin-top: 5%;
+    font-weight: bold;
+    width: fit-content;
+}
+
+@keyframes flip {
+    0% {transform: rotateY(0deg);}
+    50%{transform: rotateY(90deg);}
+    100%{}
+}
+
+@keyframes rise {
+    10% {transform: translateY(-10px);}
+    40%{transform: translateY(0px);}
+    100%{}
 }
