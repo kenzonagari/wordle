@@ -3,12 +3,15 @@ let inputWord = [];
 let turnCounter = 0;
 let WORDLENGTH = 5;
 const colors = {
-    wrong: '#464655',
+    wrong: '#343844',
     halfRight: '#8c86aa',
     right: '#067bc2',
 };
 let letterCounter = 0;
 let gameOver = 0;
+
+const stepTime = 200;
+const flipTime = 600;
 
 const qwerty = "qwertyuiopasdfghjklzxcvbnm"
 const qwertyArr = qwerty.toUpperCase().split("");
@@ -119,9 +122,11 @@ function compareWord (turn) {
     for (let i = 0 ; i < WORDLENGTH ; i++){
 
         flipSquare($(`#letter${i}`),colors.wrong,i); //*grey
+        markKeyboard(inputWord[i], colors.wrong);
         
         if(inputWord[i] === testWordDouble[i]){ //if letter is in correct square
             flipSquare($(`#letter${i}`),colors.right, i); //*correct
+            markKeyboard(inputWord[i], colors.right);
             correctLetter++;
             inputWord[i] = "";
             testWordDouble[i] = ""; //replace the common letter with a blank
@@ -132,6 +137,7 @@ function compareWord (turn) {
         for (let j = 0; j < WORDLENGTH ; j++){
             if((inputWord[i] === testWordDouble[j]) && (inputWord[i] != "")){ //if letter exists but not in correct square
                 flipSquare($(`#letter${i}`),colors.halfRight, i); //*half-correct
+                markKeyboard(inputWord[i], colors.halfRight);
                 testWordDouble[j] = ""; //replace the common letter with a blank
                 j = 4; //force end loop
             }
@@ -149,33 +155,48 @@ function compareWord (turn) {
     }
 }
 
-const stepT = 200;
-const flipT = 600;
-
 function flipSquare ($div, color, num){
     setTimeout(()=>{
         gameOver = 1; // disallow input while animation plays
-        $div.css({animation: `flip ${flipT}ms ease-out`});
-    }, stepT*(num));
+        $div.css({animation: `flip ${flipTime}ms ease-out`});
+    }, stepTime*(num));
     setTimeout(()=>{
         $div.css('background', color);
         $div.css('border-color', color);
-    }, (stepT*(num)+(flipT/2)));
+    }, (stepTime*(num)+(flipTime/2)));
     setTimeout(()=>{
         gameOver = 0; // allow input after animation plays
         keyDown = false;
-    }, (stepT*4 +(flipT)));
+    }, (stepTime*4 +(flipTime)));
+}
+
+const correctLetters=[];
+
+function markKeyboard (letter, color) {
+
+    setTimeout(()=>{
+        $(`#button-${letter}`).css('background', color);
+        for(let i = 0; i <= correctLetters.length ; i++){
+            if(letter === correctLetters[i]){
+                $(`#button-${letter}`).css('background', colors.right); //prevent correct letter from being overwritten
+            }
+        }
+        if(color === colors.right){
+            correctLetters.push(letter);
+            //console.log(correctLetters);
+        }
+    }, (stepTime) + (stepTime*4 +(flipTime)));
 }
 
 function win(){
-    const stepT = 100;
+    const stepTime = 100;
     gameOver = 1;
     gameOverLog('Yay! You guessed the word!');
     for (let i = 0 ; i < 5 ; i++){
         setTimeout(()=>{
             gameOver = 1;
             $(`#letter${i}`).css({animation: `rise 1s ease-out`});
-        }, (stepT*(i+3)) + (stepT*4 +(flipT)));
+        }, (stepTime*(i+3)) + (stepTime*4 +(flipTime)));
     }
 }
 
@@ -187,7 +208,7 @@ function lose (){
 function gameOverLog(str){
     setTimeout(()=>{
         $('#gameover-log').text(str);
-    }, (stepT) + (stepT*4 +(flipT)));
+    }, (stepTime) + (stepTime*4 +(flipTime)));
 }
 
 function log(msg){
