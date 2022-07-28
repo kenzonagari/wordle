@@ -1,5 +1,3 @@
-$(() => {
-    
 const testWord = WORDS[Math.floor(Math.random()*WORDS.length)];
 let inputWord = [];
 let turnCounter = 0;
@@ -9,6 +7,15 @@ const colors = {
     halfRight: '#8c86aa',
     right: '#067bc2',
 };
+let letterCounter = 0;
+let gameOver = 0;
+
+const qwerty = "qwertyuiopasdfghjklzxcvbnm"
+const qwertyArr = qwerty.toUpperCase().split("");
+
+
+$(() => {
+    
 // let hasInput = false;
     
 // function printWord (string) {
@@ -146,7 +153,6 @@ const stepT = 200;
 const flipT = 600;
 
 function flipSquare ($div, color, num){
-
     setTimeout(()=>{
         gameOver = 1; // disallow input while animation plays
         $div.css({animation: `flip ${flipT}ms ease-out`});
@@ -163,12 +169,13 @@ function flipSquare ($div, color, num){
 
 function win(){
     const stepT = 100;
+    gameOver = 1;
     gameOverLog('Yay! You guessed the word!');
     for (let i = 0 ; i < 5 ; i++){
         setTimeout(()=>{
             gameOver = 1;
             $(`#letter${i}`).css({animation: `rise 1s ease-out`});
-        }, (stepT*i) + (stepT*4 +(flipT)));
+        }, (stepT*(i+3)) + (stepT*4 +(flipT)));
     }
 }
 
@@ -201,12 +208,12 @@ function toggleNextRow (turn) {
 
 function shakeRow(num){
     //$(`#row${num}`).finish();
-    $(`#row${num}`).effect("shake", {distance:5, times:3});
+    $(`#row${num}`).css({animation: `wiggle 0.5s ease-out`});
+    setTimeout(()=>{
+        $(`#row${num}`).css({animation: ''});
+    }, 500)
 }
 
-
-let letterCounter = 0;
-let gameOver = 0;
 let keyDown = false;
 
 $(window).keydown(function(e) {
@@ -244,6 +251,48 @@ $(window).keyup(function(e) { //*prevent continuous input when Enter key is held
             keyDown = false;
         } 
     }
+});
+
+for (let i = 0 ; i < 3 ; i++){
+    for (let j = 0 ; j < qwertyArr.length ; j++){
+        const $divLetter = $('<div>').attr('id',`button-${qwertyArr[j]}`).addClass('button').text(qwertyArr[j]);
+        $(`#button-row${i}`).append($divLetter);
+        if((qwertyArr[j] === 'P' && i === 0) || (qwertyArr[j] === 'L' && i === 1)){
+            i++;
+        }
+    }
+}
+
+const $divEnter = $('<div>').attr('id',`button-enter`).addClass('button custom').text('ENTER');
+const $divBackspace = $('<div>').attr('id',`button-backspace`).addClass('button custom').text('<[X]');
+
+$('#button-Z').before($divEnter);
+$('#button-M').after($divBackspace);
+
+$('.button').on("click", (event)=>{
+    if(gameOver === 0){
+        // console.log(event.target.id)
+        for(let i = 0 ; i < qwertyArr.length ; i++){
+            if(event.target.id === `button-${qwertyArr[i]}`){ //A-Z
+                if(letterCounter < WORDLENGTH){
+                    inputLetter(qwertyArr[i],letterCounter);
+                    letterCounter++;
+                }
+            } 
+        }
+        if (event.target.id === `button-backspace`) { //Backspace
+            if(letterCounter >= 0){
+                removeLetter(letterCounter-1);
+                if(letterCounter !== 0){
+                    letterCounter--
+                }
+            }
+        } else if (event.target.id === `button-enter`) { //Enter
+            submitWord();
+        }
+    }
+});
+
 
 });
 
@@ -260,7 +309,3 @@ $(window).keyup(function(e) { //*prevent continuous input when Enter key is held
 
 
 
-
-
-
-});
