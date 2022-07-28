@@ -126,8 +126,9 @@ h2 {
 }
 
 #buttons{
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    bottom: 5px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
